@@ -11,6 +11,7 @@ const foodColor = "blue";
 let snake, food, dir, bounds;
 let thread;
 
+//2D vector with X and Y properties
 class Vec {
 	constructor(x, y) {
 		this.x = x;
@@ -23,15 +24,19 @@ class Vec {
 }
 
 function setup() {
+	//define bottom right bounds of play area and approximate center
 	bounds = new Vec(canvas.width / scl - 1, canvas.height / scl - 1);
 	let center = new Vec(Math.floor(bounds.x / 2), Math.floor(bounds.y / 2));
 
+	//initialize snake
 	snake = [];
 	for (let i = 0; i < 4; i++) {
-		snake.push(new Vec(center.x - 3 - i, center.y));
+		snake.push(new Vec(center.x - 2 - i, center.y));
 	}
 
+	//ensure snake isn't moving
 	dir = new Vec(0, 0);
+	//spawn food in front of snake
 	food = new Vec(center.x + 4, center.y);
 
 	draw();
@@ -39,36 +44,44 @@ function setup() {
 }
 
 function update() {
-	let head = snake[0];
+	//if player has started moving
+	if (dir.y !== 0 || dir.x !== 0) {
+		let head = snake[0];
 
-	let newX = head.x + dir.x;
-	let newY = head.y + dir.y;
-	let newPos = new Vec(newX, newY);
+		//define new position for snake's head
+		let newX = head.x + dir.x;
+		let newY = head.y + dir.y;
+		let newPos = new Vec(newX, newY);
 
-	if (canMove(newPos)) {
-		if (head.equals(food)) {
-			food = getCoords();
+		if (canMove(newPos)) {
+			//move forward
+			if (head.equals(food)) {
+				food = getCoords();
+			} else {
+				snake.splice(snake.length - 1, 1);
+			}
+			snake.unshift(newPos);
 		} else {
-			snake.splice(snake.length - 1, 1);
+			//death
+			clearInterval(thread);
+			alert("Score: " + (snake.length - 4));
+			setup();
 		}
-		snake.unshift(newPos);
-	} else if (dir.y !== 0 || dir.x !== 0) {
-		//death
-		clearInterval(thread);
-		alert("Score: " + (snake.length - 4));
-		setup();
-	}
 
-	draw();
+		draw();
+	}
 }
 
 function draw() {
+	//draw background
 	context.fillStyle = backgroundColor;
 	context.fillRect(0, 0, canvas.width, canvas.height);
 
+	//draw food
 	context.fillStyle = foodColor;
 	context.fillRect(food.x * scl + 1, food.y * scl + 1, scl - 2, scl - 2);
 
+	//draw snake with large head
 	context.fillStyle = snakeColor;
 	context.fillRect(snake[0].x * scl, snake[0].y * scl, scl, scl);
 	for (let i = 1; i < snake.length; i++) {
@@ -77,11 +90,13 @@ function draw() {
 }
 
 function canMove(pos) {
+	//if new position exceeds bounds
 	if (pos.x < 0 || pos.y < 0 || pos.x > bounds.x || pos.y > bounds.y) {
 		return false;
 	}
-	for (const seg of snake) {
-		if (pos.equals(seg)) {
+	//if new position collides with snake body
+	for (let i = 0; i < snake.length - 1; i++) {
+		if (pos.equals(snake[i])) {
 			return false;
 		}
 	}
@@ -89,9 +104,11 @@ function canMove(pos) {
 }
 
 function getCoords() {
+	//define random coordinates within game bounds
 	let x = Math.floor(Math.random() * (bounds.x + 1));
 	let y = Math.floor(Math.random() * (bounds.y + 1));
 
+	//ensure that coordinates don't intersect snake
 	while (!canMove(new Vec(x, y))) {
 		x = Math.floor(Math.random() * (bounds.x + 1));
 		y = Math.floor(Math.random() * (bounds.y + 1));
