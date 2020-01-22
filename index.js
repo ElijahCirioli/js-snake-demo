@@ -9,7 +9,6 @@ const backgroundColor = "lightGreen";
 const foodColor = "blue";
 
 let snake, food, dir, bounds;
-let playing = false;
 let thread;
 
 class Vec {
@@ -29,15 +28,13 @@ function setup() {
 
 	snake = [];
 	for (let i = 0; i < 4; i++) {
-		snake.push(new Vec(center.x + i, center.y));
+		snake.push(new Vec(center.x - 3 - i, center.y));
 	}
 
-	dir = new Vec(-1, 0);
-	playing = true;
+	dir = new Vec(0, 0);
+	food = new Vec(center.x + 4, center.y);
 
-	food = getCoords();
 	draw();
-
 	thread = setInterval(update, 1000 / framerate);
 }
 
@@ -55,9 +52,11 @@ function update() {
 			snake.splice(snake.length - 1, 1);
 		}
 		snake.unshift(newPos);
-	} else {
+	} else if (dir.y !== 0 || dir.x !== 0) {
+		//death
 		clearInterval(thread);
-		playing = false;
+		alert("Score: " + (snake.length - 4));
+		setup();
 	}
 
 	draw();
@@ -105,10 +104,6 @@ document.onkeydown = function(e) {
 	e = window.event || e;
 	let key = e.keyCode;
 	e.preventDefault();
-
-	if (playing === false) {
-		setup();
-	}
 
 	switch (key) {
 		case 38: //up
