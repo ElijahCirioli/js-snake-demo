@@ -142,4 +142,4 @@ document.onkeydown = function(e) {
 	}
 };
 
-setup();
+window.onload = setup();
