@@ -4,9 +4,9 @@ const context = canvas.getContext("2d");
 const scl = 20;
 const framerate = 10;
 
-const snakeColor = "red";
-const backgroundColor = "lightGreen";
-const foodColor = "blue";
+const snakeColor = "#d63838";
+const backgroundColor = "#b7e065";
+const foodColor = "#364cd9";
 
 let snake, food, dir, bounds;
 let thread;
