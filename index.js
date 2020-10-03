@@ -125,20 +125,28 @@ document.onkeydown = function (e) {
 
 	switch (key) {
 		case 38: //up
-			dir.y = -1;
-			dir.x = 0;
+			if (dir.y !== 1) {
+				dir.y = -1;
+				dir.x = 0;
+			}
 			break;
 		case 40: //down
-			dir.y = 1;
-			dir.x = 0;
+			if (dir.y !== -1) {
+				dir.y = 1;
+				dir.x = 0;
+			}
 			break;
 		case 39: //right
-			dir.y = 0;
-			dir.x = 1;
+			if (dir.x !== -1) {
+				dir.y = 0;
+				dir.x = 1;
+			}
 			break;
 		case 37: //left
-			dir.y = 0;
-			dir.x = -1;
+			if (dir.x !== 1) {
+				dir.y = 0;
+				dir.x = -1;
+			}
 			break;
 	}
 };

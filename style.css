@@ -1,5 +1,6 @@
 body {
 	margin: 0 0 0 0;
+	background-color: #27703b;
 }
 #score {
 	width: 100px;
@@ -10,4 +11,7 @@ body {
 }
 #myCanvas {
 	margin: 0 0 0 0;
+}
+#score {
+	color: white;
 }
