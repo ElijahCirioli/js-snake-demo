@@ -1,5 +1,6 @@
 const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext("2d");
+const score = document.getElementById("score");
 
 const scl = 20;
 const framerate = 10;
@@ -61,11 +62,11 @@ function update() {
 				snake.splice(snake.length - 1, 1);
 			}
 			snake.unshift(newPos);
+			score.innerHTML = "Score: " + (snake.length - 4);
 		} else {
 			//death
 			clearInterval(thread);
-			alert("Score: " + (snake.length - 4));
-			setup();
+			setTimeout(setup, 2000);
 		}
 
 		draw();
@@ -117,7 +118,7 @@ function getCoords() {
 	return new Vec(x, y);
 }
 
-document.onkeydown = function(e) {
+document.onkeydown = function (e) {
 	e = window.event || e;
 	let key = e.keyCode;
 	e.preventDefault();
